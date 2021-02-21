@@ -10,5 +10,7 @@ from config import Config
 one_page = MailHandler("https://mail.google.com/")
 
 trigger_login = one_page.login_in(Config.MAIl_ADDRESS, Config.MAIL_PASSWORD)
-print(trigger_login)
-
+print('main', trigger_login)
+if not trigger_login:
+    one_page.shutdown()
+# print("main", one_page.check_new_mails())

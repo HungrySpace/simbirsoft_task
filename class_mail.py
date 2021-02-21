@@ -26,10 +26,11 @@ class MailHandler:
         button_next.click()
         loggin_trigger = True
         i = 0
-        while not bool(len(self.browser.find_elements_by_xpath("//div[@class='KTeGk']")) > 0):
+        while len(self.browser.find_elements_by_xpath("//div[@class='KTeGk']")) == 0:
             time.sleep(1)
             if i > 10:
                 loggin_trigger = False
+                break
             i += 1
 
         if loggin_trigger:
@@ -40,15 +41,21 @@ class MailHandler:
             button_next.click()
             i = 0
             self.logged = True
-            while not bool(len(self.browser.find_elements_by_xpath("//div[@class='T-I T-I-KE L3']")) > 0):
+            while len(self.browser.find_elements_by_xpath("//div[@class='T-I T-I-KE L3']")) == 0:
                 time.sleep(1)
                 if i > 10:
                     self.logged = False
+                    break
                 i += 1
         return self.logged
 
     def check_new_mails(self):
-        pass
+        if self.logged and len(self.browser.find_elements_by_xpath("//tr[@class='zA zE']")) > 0:
+            # zA zE
+            new_mail_list = self.browser.find_elements_by_xpath("//tr[@class='zA zE']")
+            for new_mail in new_mail_list:
+                print('mail ', new_mail.text)
+        return new_mail_list
 
     def find_sender(self, sender, new_mails=True):
         if new_mails:
@@ -65,7 +72,6 @@ class MailHandler:
         return i
 
     def send_mail(self, reciever, text):
-        time.sleep(5)
         button_email_create = self.browser.find_element_by_xpath("//div[@class='T-I T-I-KE L3']")
         button_email_create.click()
         time.sleep(3)
